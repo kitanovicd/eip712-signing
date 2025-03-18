@@ -1,80 +1,69 @@
 <html>
-  <head>
-    <title>EIP-712 Signing</title>
-    <style>
-      body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-      button { padding: 10px 20px; margin: 5px; font-size: 16px; }
-      #signatureContainer { margin-top: 20px; word-wrap: break-word; max-width: 600px; }
-    </style>
-  </head>
-  <body>
-    <button id="connectButton">Connect Wallet</button>
-    <button id="signButton" disabled>Sign Safe Transaction</button>
-    <div id="signatureContainer"></div>
-    <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js" integrity="sha384-7XrwW52c6fLZmV0vG0vNRLQvJxDot0P8O/qgValOSUAZRH9+DM5V8oQv5k8Lq47g" crossorigin="anonymous"></script>
-    <script>
-      // Wait for Ethers.js to load
-      window.addEventListener('load', function() {
-        if (typeof ethers === 'undefined') {
-          document.getElementById("signatureContainer").innerText = "Error: Ethers.js failed to load. Please refresh the page.";
-          return;
-        }
+<head>
+<title>EIP-712 Signing</title>
+<style>
+body { text-align: center; padding: 20px; }
+button { padding: 10px 20px; margin: 5px; }
+#signatureContainer { margin-top: 20px; word-wrap: break-word; max-width: 600px; }
+</style>
+</head>
+<body>
+<button id="connectButton">Connect Wallet</button>
+<button id="signButton" disabled>Sign Safe Transaction</button>
+<div id="signatureContainer"></div>
+<script>
+const typedData = {
+  types: {
+    EIP712Domain: [{ name: "chainId", type: "uint256" }, { name: "verifyingContract", type: "address" }],
+    SafeTx: [{ name: "to", type: "address" }, { name: "value", type: "uint256" }, { name: "data", type: "bytes" }, { name: "operation", type: "uint8" }, { name: "safeTxGas", type: "uint256" }, { name: "baseGas", type: "uint256" }, { name: "gasPrice", type: "uint256" }, { name: "gasToken", type: "address" }, { name: "refundReceiver", type: "address" }, { name: "nonce", type: "uint256" }]
+  },
+  domain: { chainId: 964, verifyingContract: "0x2Cf793156eeeBeBf150eb3e2505304E6bA087147" },
+  primaryType: "SafeTx",
+  message: { to: "0x526a9eA036FB26f9D8b88236Df49C55EF9756B32", value: "50000000000000000", data: "0x", operation: 0, safeTxGas: 0, baseGas: 0, gasPrice: 0, gasToken: "0x0000000000000000000000000000000000000000", refundReceiver: "0x0000000000000000000000000000000000000000", nonce: 0 }
+};
 
-        const typedData = {
-          types: {
-            EIP712Domain: [{ name: "chainId", type: "uint256" }, { name: "verifyingContract", type: "address" }],
-            SafeTx: [{ name: "to", type: "address" }, { name: "value", type: "uint256" }, { name: "data", type: "bytes" }, { name: "operation", type: "uint8" }, { name: "safeTxGas", type: "uint256" }, { name: "baseGas", type: "uint256" }, { name: "gasPrice", type: "uint256" }, { name: "gasToken", type: "address" }, { name: "refundReceiver", type: "address" }, { name: "nonce", type: "uint256" }]
-          },
-          domain: { chainId: 964, verifyingContract: "0x2Cf793156eeeBeBf150eb3e2505304E6bA087147" },
-          primaryType: "SafeTx",
-          message: { to: "0x526a9eA036FB26f9D8b88236Df49C55EF9756B32", value: "50000000000000000", data: "0x", operation: 0, safeTxGas: 0, baseGas: 0, gasPrice: 0, gasToken: "0x0000000000000000000000000000000000000000", refundReceiver: "0x0000000000000000000000000000000000000000", nonce: 0 }
-        };
+const connectButton = document.getElementById("connectButton");
+const signButton = document.getElementById("signButton");
+const signatureContainer = document.getElementById("signatureContainer");
+let account;
 
-        const connectButton = document.getElementById("connectButton");
-        const signButton = document.getElementById("signButton");
-        const signatureContainer = document.getElementById("signatureContainer");
-        let provider, signer;
+connectButton.onclick = async () => {
+  if (!window.ethereum) {
+    signatureContainer.innerText = "Install MetaMask!";
+    return;
+  }
+  try {
+    const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    account = accounts[0];
+    const chainId = await window.ethereum.request({ method: "eth_chainId" });
+    if (parseInt(chainId, 16) !== 964) {
+      signatureContainer.innerText = "Switch to Chain ID 964!";
+      return;
+    }
+    connectButton.innerText = `Connected: ${account.slice(0, 6)}...${account.slice(-4)}`;
+    connectButton.disabled = true;
+    signButton.disabled = false;
+    signatureContainer.innerText = "Connected. Click 'Sign Safe Transaction'.";
+  } catch (error) {
+    signatureContainer.innerText = "Error: " + error.message;
+  }
+};
 
-        async function connectWallet() {
-          if (!window.ethereum) {
-            signatureContainer.innerText = "Please install MetaMask!";
-            return;
-          }
-          try {
-            provider = new ethers.BrowserProvider(window.ethereum);
-            await window.ethereum.request({ method: "eth_requestAccounts" });
-            signer = await provider.getSigner();
-            const network = await provider.getNetwork();
-            if (Number(network.chainId) !== 964) {
-              signatureContainer.innerText = "Please switch to Chain ID 964 in MetaMask!";
-              return;
-            }
-            const address = await signer.getAddress();
-            connectButton.innerText = `Connected: ${address.slice(0, 6)}...${address.slice(-4)}`;
-            connectButton.disabled = true;
-            signButton.disabled = false;
-            signatureContainer.innerText = "Wallet connected. Click 'Sign Safe Transaction' to proceed.";
-          } catch (error) {
-            signatureContainer.innerText = "Error connecting: " + error.message;
-          }
-        }
-
-        async function signMessage() {
-          if (!signer) {
-            signatureContainer.innerText = "Please connect your wallet first!";
-            return;
-          }
-          try {
-            const signature = await signer.signTypedData(typedData);
-            signatureContainer.innerText = "Signature: " + signature;
-          } catch (error) {
-            signatureContainer.innerText = "Error signing: " + error.message;
-          }
-        }
-
-        connectButton.addEventListener("click", connectWallet);
-        signButton.addEventListener("click", signMessage);
-      });
-    </script>
-  </body>
+signButton.onclick = async () => {
+  if (!account) {
+    signatureContainer.innerText = "Connect wallet first!";
+    return;
+  }
+  try {
+    const signature = await window.ethereum.request({
+      method: "eth_signTypedData_v4",
+      params: [account, JSON.stringify(typedData)]
+    });
+    signatureContainer.innerText = "Signature: " + signature;
+  } catch (error) {
+    signatureContainer.innerText = "Error: " + error.message;
+  }
+};
+</script>
+</body>
 </html>
