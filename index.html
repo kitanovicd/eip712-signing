@@ -12,7 +12,16 @@ button { padding: 10px 20px; margin: 5px; }
 <button id="signButton" disabled>Sign Safe Transaction</button>
 <div id="signatureContainer"></div>
 <script>
-const typedData = {
+const typedData1 = {
+  types: {
+    EIP712Domain: [{ name: "chainId", type: "uint256" }, { name: "verifyingContract", type: "address" }],
+    SafeTx: [{ name: "to", type: "address" }, { name: "value", type: "uint256" }, { name: "data", type: "bytes" }, { name: "operation", type: "uint8" }, { name: "safeTxGas", type: "uint256" }, { name: "baseGas", type: "uint256" }, { name: "gasPrice", type: "uint256" }, { name: "gasToken", type: "address" }, { name: "refundReceiver", type: "address" }, { name: "nonce", type: "uint256" }]
+  },
+  domain: { chainId: 964, verifyingContract: "0x2Cf793156eeeBeBf150eb3e2505304E6bA087147" },
+  primaryType: "SafeTx",
+  message: { to: "0xf4E83cBF44415a9e677310950e250E2167842c7D", value: "0", data: "0xa50ad9350000000000000000000000000000000000000000000000000000000000000801", operation: 0, safeTxGas: 0, baseGas: 0, gasPrice: 0, gasToken: "0x0000000000000000000000000000000000000000", refundReceiver: "0x0000000000000000000000000000000000000000", nonce: 2 }
+};
+  const typedData2 = {
   types: {
     EIP712Domain: [{ name: "chainId", type: "uint256" }, { name: "verifyingContract", type: "address" }],
     SafeTx: [{ name: "to", type: "address" }, { name: "value", type: "uint256" }, { name: "data", type: "bytes" }, { name: "operation", type: "uint8" }, { name: "safeTxGas", type: "uint256" }, { name: "baseGas", type: "uint256" }, { name: "gasPrice", type: "uint256" }, { name: "gasToken", type: "address" }, { name: "refundReceiver", type: "address" }, { name: "nonce", type: "uint256" }]
@@ -23,7 +32,8 @@ const typedData = {
 };
 
 const connectButton = document.getElementById("connectButton");
-const signButton = document.getElementById("signButton");
+const signButton1 = document.getElementById("signButton1");
+const signButton2 = document.getElementById("signButton2");
 const signatureContainer = document.getElementById("signatureContainer");
 let account;
 
@@ -49,7 +59,7 @@ connectButton.onclick = async () => {
   }
 };
 
-signButton.onclick = async () => {
+signButton1.onclick = async () => {
   if (!account) {
     signatureContainer.innerText = "Connect wallet first!";
     return;
@@ -57,7 +67,23 @@ signButton.onclick = async () => {
   try {
     const signature = await window.ethereum.request({
       method: "eth_signTypedData_v4",
-      params: [account, JSON.stringify(typedData)]
+      params: [account, JSON.stringify(typedData1)]
+    });
+    signatureContainer.innerText = "Signature: " + signature;
+  } catch (error) {
+    signatureContainer.innerText = "Error: " + error.message;
+  }
+};
+
+  signButton2.onclick = async () => {
+  if (!account) {
+    signatureContainer.innerText = "Connect wallet first!";
+    return;
+  }
+  try {
+    const signature = await window.ethereum.request({
+      method: "eth_signTypedData_v4",
+      params: [account, JSON.stringify(typedData2)]
     });
     signatureContainer.innerText = "Signature: " + signature;
   } catch (error) {
