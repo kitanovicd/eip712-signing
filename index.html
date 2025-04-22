@@ -54,7 +54,9 @@ connectButton.onclick = async () => {
     }
     connectButton.innerText = `Connected: ${account.slice(0, 6)}...${account.slice(-4)}`;
     connectButton.disabled = true;
-    signButton.disabled = false;
+    signButton1.disabled = false;
+    signButton2.disabled = false;
+
     signatureContainer.innerText = "Connected. Click 'Sign Safe Transaction'.";
   } catch (error) {
     signatureContainer.innerText = "Error: " + error.message;
