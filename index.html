@@ -4,7 +4,9 @@
 <style>
 body { text-align: center; padding: 20px; }
 button { padding: 10px 20px; margin: 5px; }
-#signatureContainer { margin-top: 20px; word-wrap: break-word; max-width: 600px; }
+#signatureContainer1 { margin-top: 20px; word-wrap: break-word; max-width: 600px; }
+  #signatureContainer2 { margin-top: 20px; word-wrap: break-word; max-width: 600px; }
+
 </style>
 </head>
 <body>
@@ -12,7 +14,9 @@ button { padding: 10px 20px; margin: 5px; }
 <button id="signButton1" disabled>Sign set staking precompile</button>
 <button id="signButton2" disabled>Sign increase stake</button>
 
-<div id="signatureContainer"></div>
+<div id="signatureContainer1"></div>
+  <div id="signatureContainer2"></div>
+
 <script>
 const typedData1 = {
   types: {
@@ -36,7 +40,9 @@ const typedData1 = {
 const connectButton = document.getElementById("connectButton");
 const signButton1 = document.getElementById("signButton1");
 const signButton2 = document.getElementById("signButton2");
-const signatureContainer = document.getElementById("signatureContainer");
+const signatureContainer1 = document.getElementById("signatureContainer1");
+  const signatureContainer2 = document.getElementById("signatureContainer2");
+
 let account;
 
 connectButton.onclick = async () => {
@@ -57,9 +63,13 @@ connectButton.onclick = async () => {
     signButton1.disabled = false;
     signButton2.disabled = false;
 
-    signatureContainer.innerText = "Connected. Click 'Sign Safe Transaction'.";
+    signatureContainer1.innerText = "Connected. Click 'Sign Safe Transaction'.";
+        signatureContainer2.innerText = "Connected. Click 'Sign Safe Transaction'.";
+
   } catch (error) {
-    signatureContainer.innerText = "Error: " + error.message;
+    signatureContainer1.innerText = "Error: " + error.message;
+        signatureContainer2.innerText = "Error: " + error.message;
+
   }
 };
 
@@ -73,15 +83,15 @@ signButton1.onclick = async () => {
       method: "eth_signTypedData_v4",
       params: [account, JSON.stringify(typedData1)]
     });
-    signatureContainer.innerText = "Signature: " + signature;
+    signatureContainer1.innerText = "Signature: " + signature;
   } catch (error) {
-    signatureContainer.innerText = "Error: " + error.message;
+    signatureContainer1.innerText = "Error: " + error.message;
   }
 };
 
   signButton2.onclick = async () => {
   if (!account) {
-    signatureContainer.innerText = "Connect wallet first!";
+    signatureContainer2.innerText = "Connect wallet first!";
     return;
   }
   try {
@@ -89,9 +99,9 @@ signButton1.onclick = async () => {
       method: "eth_signTypedData_v4",
       params: [account, JSON.stringify(typedData2)]
     });
-    signatureContainer.innerText = "Signature: " + signature;
+    signatureContainer2.innerText = "Signature: " + signature;
   } catch (error) {
-    signatureContainer.innerText = "Error: " + error.message;
+    signatureContainer2.innerText = "Error: " + error.message;
   }
 };
 </script>
