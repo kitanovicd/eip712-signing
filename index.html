@@ -47,7 +47,7 @@ let account;
 
 connectButton.onclick = async () => {
   if (!window.ethereum) {
-    signatureContainer.innerText = "Install MetaMask!";
+    signatureContainer1.innerText = "Install MetaMask!";
     return;
   }
   try {
@@ -55,7 +55,7 @@ connectButton.onclick = async () => {
     account = accounts[0];
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
     if (parseInt(chainId, 16) !== 964) {
-      signatureContainer.innerText = "Switch to Chain ID 964!";
+      signatureContainer1.innerText = "Switch to Chain ID 964!";
       return;
     }
     connectButton.innerText = `Connected: ${account.slice(0, 6)}...${account.slice(-4)}`;
@@ -75,7 +75,7 @@ connectButton.onclick = async () => {
 
 signButton1.onclick = async () => {
   if (!account) {
-    signatureContainer.innerText = "Connect wallet first!";
+    signatureContainer1.innerText = "Connect wallet first!";
     return;
   }
   try {
