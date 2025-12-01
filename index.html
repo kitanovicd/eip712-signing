@@ -214,18 +214,23 @@
           const accounts = await window.ethereum.request({
             method: "eth_requestAccounts",
           });
+
           account = accounts[0];
+
           const chainId = await window.ethereum.request({
             method: "eth_chainId",
           });
+
           if (parseInt(chainId, 16) !== 964) {
             signatureContainer1.innerText = "Switch to Chain ID 964!";
             return;
           }
+
           connectButton.innerText = `Connected: ${account.slice(
             0,
             6
           )}...${account.slice(-4)}`;
+
           connectButton.disabled = true;
           signButton1.disabled = false;
           signButton2.disabled = false;
@@ -288,7 +293,7 @@
         try {
           const signature = await window.ethereum.request({
             method: "eth_signTypedData_v4",
-            params: [account, JSON.stringify(typedData11)],
+            params: [account, JSON.stringify(typedData3)],
           });
           signatureContainer3.innerText = "Signature: " + signature;
         } catch (error) {
@@ -304,7 +309,7 @@
         try {
           const signature = await window.ethereum.request({
             method: "eth_signTypedData_v4",
-            params: [account, JSON.stringify(typedData21)],
+            params: [account, JSON.stringify(typedData4)],
           });
           signatureContainer4.innerText = "Signature: " + signature;
         } catch (error) {
