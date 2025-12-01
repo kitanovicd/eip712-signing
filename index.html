@@ -25,8 +25,18 @@ const typedData1 = {
   },
   domain: { chainId: 964, verifyingContract: "0x2Cf793156eeeBeBf150eb3e2505304E6bA087147" },
   primaryType: "SafeTx",
-  message: { to: "0xf4E83cBF44415a9e677310950e250E2167842c7D", value: "0", data: "0xf2fde38b000000000000000000000000055654124553459988ffffdwerji97723kjhfds8234hdSDG23420000000000000000526a9ea036fb26f9d8b88236df49c55ef9756b32", operation: 0, safeTxGas: 0, baseGas: 0, gasPrice: 0, gasToken: "0x0000000000000000000000000000000000000000", refundReceiver: "0x0000000000000000000000000000000000000000", nonce: 5 }
+  message: { to: "0xA3c92e5cbb6146384Aa5A41540EC3fc6a184139C", value: "0", data: "0xf2fde38b000000000000000000000000526a9ea036fb26f9d8b88236df49c55ef9756b32", operation: 0, safeTxGas: 0, baseGas: 0, gasPrice: 0, gasToken: "0x0000000000000000000000000000000000000000", refundReceiver: "0x0000000000000000000000000000000000000000", nonce: 6 }
 };
+const typedData11 = {
+  types: {
+    EIP712Domain: [{ name: "chainId", type: "uint256" }, { name: "verifyingContract", type: "address" }],
+    SafeTx: [{ name: "to", type: "address" }, { name: "value", type: "uint256" }, { name: "data", type: "bytes" }, { name: "operation", type: "uint8" }, { name: "safeTxGas", type: "uint256" }, { name: "baseGas", type: "uint256" }, { name: "gasPrice", type: "uint256" }, { name: "gasToken", type: "address" }, { name: "refundReceiver", type: "address" }, { name: "nonce", type: "uint256" }]
+  },
+  domain: { chainId: 964, verifyingContract: "0x2Cf793156eeeBeBf150eb3e2505304E6bA087147" },
+  primaryType: "SafeTx",
+  message: { to: "0xA3c92e5cbb6146384Aa5A41540EC3fc6a184139C", value: "0", data: "0xf2fde38b000000000000000000000000526a9ea036fb26f9d8b88236df49c55ef9756b32", operation: 0, safeTxGas: 0, baseGas: 0, gasPrice: 0, gasToken: "0x0000000000000000000000000000000000000000", refundReceiver: "0x0000000000000000000000000000000000000000", nonce: 7 }
+};
+  
   const typedData2 = {
   types: {
     EIP712Domain: [{ name: "chainId", type: "uint256" }, { name: "verifyingContract", type: "address" }],
@@ -34,14 +44,28 @@ const typedData1 = {
   },
   domain: { chainId: 964, verifyingContract: "0x2Cf793156eeeBeBf150eb3e2505304E6bA087147" },
   primaryType: "SafeTx",
-  message: { to: "0xf4E83cBF44415a9e677310950e250E2167842c7D", value: "0", data: "0xf2fde38b000000000000000000000000526a9ea036fb26f9d8b88236df49c55ef9756b32", operation: 0, safeTxGas: 0, baseGas: 0, gasPrice: 0, gasToken: "0x0000000000000000000000000000000000000000", refundReceiver: "0x0000000000000000000000000000000000000000", nonce: 6 }
+  message: { to: "0xf4E83cBF44415a9e677310950e250E2167842c7D", value: "0", data: "0xf2fde38b000000000000000000000000526a9ea036fb26f9d8b88236df49c55ef9756b32", operation: 0, safeTxGas: 0, baseGas: 0, gasPrice: 0, gasToken: "0x0000000000000000000000000000000000000000", refundReceiver: "0x0000000000000000000000000000000000000000", nonce: 7 }
+};
+
+  const typedData21 = {
+  types: {
+    EIP712Domain: [{ name: "chainId", type: "uint256" }, { name: "verifyingContract", type: "address" }],
+    SafeTx: [{ name: "to", type: "address" }, { name: "value", type: "uint256" }, { name: "data", type: "bytes" }, { name: "operation", type: "uint8" }, { name: "safeTxGas", type: "uint256" }, { name: "baseGas", type: "uint256" }, { name: "gasPrice", type: "uint256" }, { name: "gasToken", type: "address" }, { name: "refundReceiver", type: "address" }, { name: "nonce", type: "uint256" }]
+  },
+  domain: { chainId: 964, verifyingContract: "0x2Cf793156eeeBeBf150eb3e2505304E6bA087147" },
+  primaryType: "SafeTx",
+  message: { to: "0xf4E83cBF44415a9e677310950e250E2167842c7D", value: "0", data: "0xf2fde38b000000000000000000000000526a9ea036fb26f9d8b88236df49c55ef9756b32", operation: 0, safeTxGas: 0, baseGas: 0, gasPrice: 0, gasToken: "0x0000000000000000000000000000000000000000", refundReceiver: "0x0000000000000000000000000000000000000000", nonce: 8 }
 };
 
 const connectButton = document.getElementById("connectButton");
 const signButton1 = document.getElementById("signButton1");
 const signButton2 = document.getElementById("signButton2");
+  const signButton3 = document.getElementById("signButton3");
+const signButton4 = document.getElementById("signButton4");
 const signatureContainer1 = document.getElementById("signatureContainer1");
   const signatureContainer2 = document.getElementById("signatureContainer2");
+const signatureContainer1 = document.getElementById("signatureContainer3");
+  const signatureContainer2 = document.getElementById("signatureContainer4");
 
 let account;
 
@@ -62,13 +86,19 @@ connectButton.onclick = async () => {
     connectButton.disabled = true;
     signButton1.disabled = false;
     signButton2.disabled = false;
+    signButton3.disabled = false;
+    signButton4.disabled = false;
 
     signatureContainer1.innerText = "Connected. Click 'Sign Safe Transaction'.";
         signatureContainer2.innerText = "Connected. Click 'Sign Safe Transaction'.";
+    signatureContainer3.innerText = "Connected. Click 'Sign Safe Transaction'.";
+        signatureContainer4.innerText = "Connected. Click 'Sign Safe Transaction'.";
 
   } catch (error) {
     signatureContainer1.innerText = "Error: " + error.message;
         signatureContainer2.innerText = "Error: " + error.message;
+    signatureContainer3.innerText = "Error: " + error.message;
+        signatureContainer4.innerText = "Error: " + error.message;
 
   }
 };
@@ -102,6 +132,36 @@ signButton1.onclick = async () => {
     signatureContainer2.innerText = "Signature: " + signature;
   } catch (error) {
     signatureContainer2.innerText = "Error: " + error.message;
+  }
+
+    signButton3.onclick = async () => {
+  if (!account) {
+    signatureContainer3.innerText = "Connect wallet first!";
+    return;
+  }
+  try {
+    const signature = await window.ethereum.request({
+      method: "eth_signTypedData_v4",
+      params: [account, JSON.stringify(typedData11)]
+    });
+    signatureContainer3.innerText = "Signature: " + signature;
+  } catch (error) {
+    signatureContainer3.innerText = "Error: " + error.message;
+  }
+
+  signButton4.onclick = async () => {
+  if (!account) {
+    signatureContainer4.innerText = "Connect wallet first!";
+    return;
+  }
+  try {
+    const signature = await window.ethereum.request({
+      method: "eth_signTypedData_v4",
+      params: [account, JSON.stringify(typedData21)]
+    });
+    signatureContainer4.innerText = "Signature: " + signature;
+  } catch (error) {
+    signatureContainer4.innerText = "Error: " + error.message;
   }
 };
 </script>
